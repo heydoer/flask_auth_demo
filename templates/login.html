@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <!-- import CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+
+<body>
+<div id="app">
+
+  <el-row :gutter="20">
+    <el-col :span="7" :offset="8">
+      <el-form :model="loginForm" ref="loginForm" label-width="100px">
+        <!-- 手机号 -->
+        <el-form-item
+                label="手机号码"
+                prop="phone"
+                :rules="[
+      { pattern: /^1[34578]\d{9}$/, message: '手机号码格式错误' },
+    ]"
+        >
+          <el-input type="phone" v-model.number="loginForm.phone" autocomplete="off"></el-input>
+        </el-form-item>
+
+        <!-- 短信验证码 -->
+        <el-form-item
+                label="短信验证码"
+                prop="phoneCode"
+        >
+          <el-input type="phoneCode" v-model.number="loginForm.phoneCode" autocomplete="off"></el-input>
+        </el-form-item>
+
+        <el-form-item>
+          <el-button type="default" @click="submitForm('phoneCodeForm')">获取短信验证码</el-button>
+          <el-button type="primary" @click="submitForm('loginForm')">注册&登陆</el-button>
+        </el-form-item>
+
+      </el-form>
+    </el-col>
+  </el-row>
+
+
+</div>
+</body>
+
+<!-- import Vue before Element -->
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<!-- import JavaScript -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script>
+  new Vue({
+    el: '#app',
+    data() {
+      return {
+        loginForm: {
+          phone: '',
+          phoneCode: '',
+        },
+      };
+    },
+    methods: {
+      submitForm(formName) {
+        if ('phoneCodeForm' === formName) {
+          // TODO ajax获取手机验证码
+          return
+        }
+        // login
+        let self = this;
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            // TODO ajax登陆请求
+            alert('submit!' + self.loginForm.phone);
+          } else {
+            return false;
+          }
+        });
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      }
+    }
+  })
+</script>
+</html>
