@@ -1,54 +1,65 @@
 # -*- coding: UTF-8 -*-
 """ 手机验证码对象.
 """
-
+import random
 import time
 from util import misc
-from const import STATUS
+import const
+from collections import defaultdict
+
+
+codes_pool = defaultdict(lambda: PhoneCode.InnerData())
 
 
 class PhoneCode:
     """ 手机验证码 """
 
-    created_at = 0
-    phone = ''
-    code = ''
+    class InnerData:
+        created_at = 0
+        phone = ''
+        code = ''
 
-    __VERIFY_TTL = 60 * 5  # 手机验证码有效期
-    __RETRY_TTL = 60  # 手机验证码可以重复推送的等待时间
+        def available(self):
+            # 验证码是否在有效期内
+            return bool(self.phone) \
+                   and time.time() >= self.created_at + const.PhoneCode.verify_ttl
+
+        def can_post(self):
+            # 是否可以重新推送该手机验证码
+            return time.time() > self.created_at + const.PhoneCode.retry_ttl
+
+    __data = InnerData()
 
     def __init__(self, phone):
         if not misc.verify_phone_num(phone):
             return
-        # TODO 先从缓存load出，如果没有再生成
-        self.phone = phone
-        self.created_at = int(time.time())
-        # TODO 写入缓存
+
+        self.__data = codes_pool[phone]
+
+        if not self.__data.created_at or not self.__data.available():
+            # 刷新对象
+            self.__data.phone = phone
+            self.__data.created_at = int(time.time())
+            codes_pool[phone] = self.__data
 
     def post(self):
         """ 推送验证码 """
-        if not self.__available():
-            return STATUS.PHONE_NUM_ILLEGAL
-        if time.time() >= self.created_at + self.__RETRY_TTL:
-            return STATUS.PHONE_CODE_POST_TOO_FREQUENTLY
+        if not self.__data.available():
+            return const.STATUS.PHONE_NUM_ILLEGAL
+        if self.__data.can_post():
+            return const.STATUS.PHONE_CODE_POST_TOO_FREQUENTLY
 
-        # TODO 生成验证码，调用第三方服务推送
+        # 生成验证码，并刷新缓存
+        self.__data.code = self.__gen_code()
+        codes_pool[self.__data.phone] = self.__data
 
-        misc.post_phone_code('', '')
-        return STATUS.SUC
+        return misc.post_phone_code(self.__data.phone, self.__data.code)
 
     def verify(self, code):
         """ 验证码校验 """
-        if not code or self.code != code:
-            return False
-        if time.time() >= self.created_at + self.__VERIFY_TTL:
-            return False
-        return True
+        return self.__data.available() and self.__data.code == code
 
-    def __gen_code(self):
-        """ 生成手机验证码 """
-        return ''
-
-    def __available(self):
-        return bool(self.phone)
-
+    @staticmethod
+    def __gen_code():
+        """ 生成6位手机验证码 """
+        return str(random.Random().randint(100000, 999999))

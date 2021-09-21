@@ -9,19 +9,19 @@ class User:
     phone = ''
 
     def __init__(self, uid=0, phone=''):
-        # TODO 从数据库/缓存中读取用户数据
-        if uid:
-            pass
-        elif phone:
-            pass
+        self.__mock_fill_from_db(uid, phone)
 
     def exist(self):
         return bool(self.uid)
 
     # 创建一个用户
     def create(self):
-        # TODO
+        self.__mock_insert_into_db()
+
+    def __mock_fill_from_db(self, uid=0, phone=''):
+        # TODO 从数据库/缓存中读取用户数据
         pass
 
-
-
+    def __mock_insert_into_db(self):
+        # TODO 插入一条数据到db/缓存
+        pass

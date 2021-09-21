@@ -3,6 +3,11 @@
 """
 
 
+class PhoneCode:
+    verify_ttl = 60 * 5  # 手机验证码有效期
+    retry_ttl = 60  # 手机验证码可以重复推送的等待时间
+
+
 class JWT:
     key = 'Dxm/1993-12-20'
     algorithm = 'HS256'

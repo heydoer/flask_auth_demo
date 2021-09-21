@@ -20,9 +20,7 @@ class AuthFacade:
         if not misc.verify_phone_num(phone):
             return STATUS.PHONE_NUM_ILLEGAL
 
-        code = PhoneCode(phone)
-
-        return code.post()
+        return PhoneCode(phone).post()
 
     @staticmethod
     def login(phone, code_num):
