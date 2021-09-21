@@ -7,7 +7,6 @@ from util import misc
 import const
 from collections import defaultdict
 
-
 codes_pool = defaultdict(lambda: PhoneCode.InnerData())
 
 
@@ -22,13 +21,14 @@ class PhoneCode:
         def available(self):
             # 验证码是否在有效期内
             return bool(self.phone) \
-                   and time.time() >= self.created_at + const.PhoneCode.verify_ttl
+                   and time.time() < self.created_at + const.PhoneCode.verify_ttl
 
         def can_post(self):
             # 是否可以重新推送该手机验证码
-            return time.time() > self.created_at + const.PhoneCode.retry_ttl
+            return not self.code or \
+                   time.time() > self.created_at + const.PhoneCode.retry_ttl
 
-    __data = InnerData()
+    __data = None
 
     def __init__(self, phone):
         if not misc.verify_phone_num(phone):
@@ -46,7 +46,7 @@ class PhoneCode:
         """ 推送验证码 """
         if not self.__data.available():
             return const.STATUS.PHONE_NUM_ILLEGAL
-        if self.__data.can_post():
+        if not self.__data.can_post():
             return const.STATUS.PHONE_CODE_POST_TOO_FREQUENTLY
 
         # 生成验证码，并刷新缓存
@@ -57,9 +57,15 @@ class PhoneCode:
 
     def verify(self, code):
         """ 验证码校验 """
-        return self.__data.available() and self.__data.code == code
+        if not (self.__data.available()
+                and self.__data.code
+                and self.__data.code == code):
+            return False
+        del codes_pool[self.__data.phone]
+        return True
 
     @staticmethod
     def __gen_code():
         """ 生成6位手机验证码 """
-        return str(random.Random().randint(100000, 999999))
+        # return str(random.Random().randint(100000, 999999))
+        return '000000'

@@ -61,6 +61,5 @@ class UserSession:
         if 'uid' not in jwt_data or 'expired_at' not in jwt_data:
             return
 
-        # TODO 先尝试从缓存中读取Session，读不到再load出
-        self. user = User(uid=jwt_data['uid'])
+        self.user = User(uid=jwt_data['uid'])
         self.expired_at = int(jwt_data['expired_at'])
