@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
-# 手机验证码model
+""" 手机验证码对象.
+"""
 
 import time
 from util import misc
@@ -28,7 +29,7 @@ class PhoneCode:
         """ 推送验证码 """
         if not self.__available():
             return STATUS.PHONE_NUM_ILLEGAL
-        if time.time() < self.created_at + self.__RETRY_TTL:
+        if time.time() >= self.created_at + self.__RETRY_TTL:
             return STATUS.PHONE_CODE_POST_TOO_FREQUENTLY
 
         # TODO 生成验证码，调用第三方服务推送

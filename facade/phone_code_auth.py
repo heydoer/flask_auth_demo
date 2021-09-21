@@ -1,4 +1,6 @@
 # -*- coding: UTF-8 -*-
+""" 手机验证码相关API.
+"""
 
 from const import STATUS
 from util import misc
@@ -28,11 +30,20 @@ class AuthFacade:
         code = PhoneCode(phone)
         if not code.verify(code_num):
             return None
-        # TODO 生成user session，返回token
+
         user_session = UserSession(phone=phone)
         if not user_session.is_login():
             return None
         return user_session.get_token()
+
+    @staticmethod
+    def get_user_session(token):
+        """ 根据token获取用户会话 """
+        if not token:
+            return None
+
+        sess = UserSession(token=token)
+        return sess if sess.is_login() else None
 
 
 authImpl = AuthFacade()

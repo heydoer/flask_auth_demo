@@ -1,4 +1,7 @@
 # -*- coding: UTF-8 -*-
+""" 工具类.
+"""
+
 import re
 from const import STATUS
 
