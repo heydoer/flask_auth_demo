@@ -23,7 +23,7 @@ def login():
 @app.route('/home', methods=['GET'])
 def home():
     token = request.headers.get('token')
-    sess = authImpl.login(token=token)
+    sess = authImpl.get_user_session(token=token)
     if not sess:
         return redirect(url_for('login'))
     return render_template('home.html')

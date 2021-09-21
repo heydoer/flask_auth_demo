@@ -8,7 +8,7 @@ from const import STATUS
 
 def verify_phone_num(phone):
     """ 验证手机号合法性 """
-    return not not re.match(r'1[3,4,5,7,8][0-9]{9}', phone)
+    return bool(re.match(r'1[3,4,5,7,8][0-9]{9}', phone))
 
 
 def post_phone_code(phone, code):

@@ -6,6 +6,7 @@ import time
 import jwt
 from model.user import User
 from util import misc
+from const import JWT
 
 
 class UserSession:
@@ -13,7 +14,6 @@ class UserSession:
     user = None
     expired_at = 0
 
-    __TOKEN_KEY = 'Dxm/1993-12-20'
     __TTL = 60 * 60 * 24
 
     # 新建一个用户会话
@@ -28,14 +28,18 @@ class UserSession:
 
     # 当前会话是否可用
     def is_login(self):
-        return not not self.user \
+        return bool(self.user) \
                and not self.__is_expired()
 
     # 获取会话token
     def get_token(self):
         """ 返回token """
-        # TODO 返回token
-        pass
+        if not self.is_login():
+            return None
+        return jwt.encode({
+            'uid': self.user.uid,
+            'expired_at': self.expired_at,
+        }, key=JWT.key, algorithm=JWT.algorithm)
 
     # 会话是否过期
     def __is_expired(self):
@@ -50,7 +54,7 @@ class UserSession:
 
     def __init_by_token(self, token):
         try:
-            jwt_data = jwt.decode(token, self.__TOKEN_KEY)
+            jwt_data = jwt.decode(token, JWT.key, algorithms=[JWT.algorithm])
         except jwt.exceptions.InvalidSignatureError:
             return
 
@@ -58,5 +62,5 @@ class UserSession:
             return
 
         # TODO 先尝试从缓存中读取Session，读不到再load出
-        self.user = User(uid=jwt_data['uid'])
+        self. user = User(uid=jwt_data['uid'])
         self.expired_at = int(jwt_data['expired_at'])

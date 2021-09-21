@@ -16,7 +16,7 @@ class User:
             pass
 
     def exist(self):
-        return not not self.uid
+        return bool(self.uid)
 
     # 创建一个用户
     def create(self):

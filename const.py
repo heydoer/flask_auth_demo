@@ -3,6 +3,11 @@
 """
 
 
+class JWT:
+    key = 'Dxm/1993-12-20'
+    algorithm = 'HS256'
+
+
 class STATUS:
     """ 状态码常量 """
 

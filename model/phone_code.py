@@ -50,5 +50,5 @@ class PhoneCode:
         return ''
 
     def __available(self):
-        return not not self.phone
+        return bool(self.phone)
 
