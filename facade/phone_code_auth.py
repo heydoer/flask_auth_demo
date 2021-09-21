@@ -25,14 +25,13 @@ class AuthFacade:
     @staticmethod
     def login(phone, code_num):
         """ 验证手机验证码 """
-        code = PhoneCode(phone)
-        if not code.verify(code_num):
+        if not PhoneCode(phone).verify(code_num):
             return None
 
-        user_session = UserSession(phone=phone)
-        if not user_session.is_login():
+        sess = UserSession(phone=phone)
+        if not sess.is_login():
             return None
-        return user_session.get_token()
+        return sess.get_token()
 
     @staticmethod
     def get_user_session(token):
