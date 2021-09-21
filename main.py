@@ -6,7 +6,7 @@ from flask import redirect
 from flask import request
 from flask import url_for
 from markupsafe import escape
-from facade.auth import authImpl
+from facade.phone_code_auth import authImpl
 
 app = Flask(__name__)
 

@@ -14,3 +14,15 @@ def post_phone_code(phone, code):
         return STATUS.PHONE_NUM_ILLEGAL
     # TODO
     return STATUS.SUC
+
+
+def encrypt_phone(phone):
+    """ 加密手机号 """
+    # TODO
+    return phone
+
+
+def decrypt_phone(secret):
+    """ 解密手机号 """
+    # TODO
+    return secret
