@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-""" 路由.
+""" 入口文件&路由.
 """
 
 from flask import Flask
