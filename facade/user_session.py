@@ -14,8 +14,6 @@ class UserSession:
     user = None
     expired_at = 0
 
-    __TTL = 60 * 60 * 24
-
     # 新建一个用户会话
     def __init__(self, token=None, phone=None):
         if token:
@@ -46,7 +44,7 @@ class UserSession:
         return time.time() >= self.expired_at
 
     def __init_by_phone(self, phone):
-        self.expired_at = int(time.time()) + self.__TTL
+        self.expired_at = int(time.time()) + JWT.TTL
         phone = misc.encrypt_phone(phone)
         self.user = User(phone=phone)
         if not self.user.exist():  # 如果手机号不存在，则注册一个

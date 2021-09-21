@@ -11,6 +11,7 @@ class PhoneCode:
 class JWT:
     key = 'Dxm/1993-12-20'
     algorithm = 'HS256'
+    TTL = 60 * 60 * 24
 
 
 class STATUS:
