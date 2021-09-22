@@ -36,6 +36,7 @@ class STATUS:
     """
     SUC = __status(0, 'success')
     ERR = __status(1, 'fail')
+    PARAM_ERR = __status(100, 'params err')
 
     PHONE_NUM_ILLEGAL = __status(1000, 'phone num illegal')
     PHONE_CODE_ALREADY_POSTED = __status(1001, 'phone code already posted')

@@ -36,21 +36,18 @@ class PhoneCode:
 
         self.__data = codes_pool[phone]
 
-        if not self.__data.created_at or not self.__data.available():
-            # 刷新对象
+        if not self.__data.phone:
             self.__data.phone = phone
-            self.__data.created_at = int(time.time())
             codes_pool[phone] = self.__data
 
     def post(self):
         """ 推送验证码 """
-        if not self.__data.available():
-            return const.STATUS.PHONE_NUM_ILLEGAL
         if not self.__data.can_post():
             return const.STATUS.PHONE_CODE_POST_TOO_FREQUENTLY
 
         # 生成验证码，并刷新缓存
         self.__data.code = self.__gen_code()
+        self.__data.created_at = int(time.time())
         codes_pool[self.__data.phone] = self.__data
 
         return misc.post_phone_code(self.__data.phone, self.__data.code)

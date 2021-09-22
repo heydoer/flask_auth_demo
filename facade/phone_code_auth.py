@@ -5,7 +5,7 @@
 from const import STATUS
 from util import misc
 from model.phone_code import PhoneCode
-from facade.user_session import UserSession
+from model.user_session import UserSession
 
 
 class AuthFacade:
