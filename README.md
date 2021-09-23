@@ -8,3 +8,6 @@ flask run
 ```
 
 学习文档请参考: http://liguoxian.cc/website/phone_auth.html
+
+### TODO
+- 完成前端交互、优化前端样式
